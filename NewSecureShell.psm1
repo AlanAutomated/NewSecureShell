@@ -30,4 +30,4 @@ $ScriptBlock = {
 Register-ArgumentCompleter -CommandName New-SecureShell -ParameterName SessionHost -ScriptBlock $ScriptBlock
 
 # Finally, export the function
-Export-ModuleMember -Function New-SecureShell
+Export-ModuleMember -Function *
