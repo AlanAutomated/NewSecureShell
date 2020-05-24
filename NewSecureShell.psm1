@@ -6,7 +6,7 @@ function New-SecureShell {
         [string]$SessionHost
     )
     # This is the default path to the OpenSSH client on Windows 10
-    Return Start-Process -FilPath C:\Windows\System32\OpenSSH\ssh.exe $SessionHost
+    Return Start-Process -FilePath C:\Windows\System32\OpenSSH\ssh.exe $SessionHost
 }
 
 $ScriptBlock = {
@@ -29,5 +29,8 @@ $ScriptBlock = {
 # Register the parameters for auto completion
 Register-ArgumentCompleter -CommandName New-SecureShell -ParameterName SessionHost -ScriptBlock $ScriptBlock
 
+# Add an alias for ease of use
+New-Alias -Name ssh -Value New-SecureShell
+
 # Finally, export the function
-Export-ModuleMember -Function New-SecureShell
+Export-ModuleMember -Alias ssh -Function New-SecureShell
