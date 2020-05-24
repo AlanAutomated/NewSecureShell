@@ -6,30 +6,33 @@ function New-SecureShell {
         [string]$SessionHost
     )
     # This is the default path to the OpenSSH client on Windows 10
-    Return Start-Process -FilePath C:\Windows\System32\OpenSSH\ssh.exe $SessionHost
+    if ($SessionHost) { 
+        return Start-Process -FilePath C:\Windows\System32\OpenSSH\ssh.exe $SessionHost
+    }
+    return "You must specify a hostname or IP address"
 }
 
 $ScriptBlock = {
+    param ($commandName, $parameterName, $wordToComplete)
     $ConfigHosts = @(
         (
             # A valid DNS hostname is expected
-            Get-Content -Path ~/.ssh/config | Select-String -Pattern '^Host [a-z0-9\-\.]+$'
+            Get-Content -Path ~/.ssh/config | Select-String -Pattern '^Host [a-z0-9\-\.\:]+$'
         ).Matches.ForEach(
             {
-                $_.Value.split()[1]
+                $_.Value.split()[1] 
             }
         )
     )
-    # Only return if there are actual hosts
+    # Only return matches, if any
     if ($ConfigHosts.Count) {
-        $ConfigHosts
+        $ConfigHosts | Where-Object { $_ -Like "$wordToComplete*" }
     }
 }
 
 # Register the parameters for auto completion
 Register-ArgumentCompleter -CommandName New-SecureShell -ParameterName SessionHost -ScriptBlock $ScriptBlock
 
-# Add an alias for ease of use
 New-Alias -Name ssh -Value New-SecureShell
 
 # Finally, export the function
