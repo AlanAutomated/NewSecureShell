@@ -7,7 +7,7 @@ function New-SecureShell {
     )
     # This is the default path to the OpenSSH client on Windows 10
     if ($SessionHost) { 
-        return Start-Process -FilePath C:\Windows\System32\OpenSSH\ssh.exe $SessionHost
+        return & C:\Windows\System32\OpenSSH\ssh.exe $SessionHost
     }
     return "You must specify a hostname or IP address"
 }
