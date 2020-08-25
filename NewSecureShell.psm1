@@ -5,9 +5,14 @@ function New-SecureShell {
         [Parameter()]
         [string]$SessionHost
     )
-    # This is the default path to the OpenSSH client on Windows 10
-    if ($SessionHost) { 
-        return & C:\Windows\System32\OpenSSH\ssh.exe $SessionHost
+    if ($SessionHost) {
+        if ($IsWindows) {
+            # This is the default path to the OpenSSH client on Windows 10
+            return & C:\Windows\System32\OpenSSH\ssh.exe $SessionHost
+        } else {
+            # This is the default path to the OpenSSH client on Linux and maybe Mac?
+            return & /usr/bin/ssh $SessionHost
+        }
     }
     return "You must specify a hostname or IP address"
 }
